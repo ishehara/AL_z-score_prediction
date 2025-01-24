@@ -4,6 +4,8 @@ import numpy as np
 
 # Load the pickled model
 model = pickle.load(open('model.pkl', 'rb'))
+scaler = pickle.load(open('scaler.pkl', 'rb'))
+poly = pickle.load(open('poly_features.pkl', 'rb'))
 
 # page configuration
 
@@ -125,7 +127,9 @@ if submitted:
     ]])
     
     try:
-        prediction = model.predict(input_data)
+        scaled = scaler.transform(input_data)
+        poly = poly.transform(scaled)
+        prediction = model.predict(poly)
         st.success(f"Predicted Z-Score: {prediction[0]:.2f}")
 
     except Exception as e:
